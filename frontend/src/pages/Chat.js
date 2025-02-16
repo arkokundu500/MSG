@@ -29,14 +29,19 @@ const Chat = () => {
 
     const userData = JSON.parse(localStorage.getItem('user'));
     if (userData) {
-      setUsername(userData.username); // Set the username from local storage
+      setUsername(userData.username);
+      const savedMessages = JSON.parse(localStorage.getItem(`chatHistory_${userData.username}`)) || [];
+      setMessages(savedMessages);
     }
   }, []);
 
   // Save chat history to local storage whenever messages change
   useEffect(() => {
     localStorage.setItem('chatHistory', JSON.stringify(messages));
-  }, [messages]);
+    if (username) {
+      localStorage.setItem(`chatHistory_${username}`, JSON.stringify(messages));
+    }
+  }, [messages, username]);
 
   // Handle sending a message
   const sendMessage = () => {
